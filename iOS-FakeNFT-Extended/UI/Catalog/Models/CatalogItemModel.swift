@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Collection: Codable, Identifiable {
+struct CatalogItemModel: Codable, Identifiable {
     let createdAt: String
     let name: String
     let cover: String
@@ -16,8 +16,8 @@ struct Collection: Codable, Identifiable {
     let author: String
     let id: String
     
-    static let mockData: [Collection] = [
-        Collection(createdAt: "2023-04-21T02:22:27Z",
+    static let mockData: [CatalogItemModel] = [
+        CatalogItemModel(createdAt: "2023-04-21T02:22:27Z",
                    name: "Peach",
                    cover: "Peach",
                    nfts: ["1nft", "2nft", "3nft", "4nft", "5nft", "6nft",],
@@ -25,7 +25,7 @@ struct Collection: Codable, Identifiable {
                    author: "1",
                    id: "1"),
         
-        Collection(createdAt: "2023-04-22T02:22:27Z",
+        CatalogItemModel(createdAt: "2023-04-22T02:22:27Z",
                    name: "Blue",
                    cover: "Blue",
                    nfts: ["1nft", "2nft", "3nft", "4nft", "5nft", "6nft", "7nft", "8nft", "9nft", "10nft"],
@@ -33,7 +33,7 @@ struct Collection: Codable, Identifiable {
                    author: "1",
                    id: "2"),
         
-        Collection(createdAt: "2023-04-23T02:22:27Z",
+        CatalogItemModel(createdAt: "2023-04-23T02:22:27Z",
                    name: "Brown",
                    cover: "Brown",
                    nfts: ["1nft", "2nft", "3nft", "4nft", "5nft", "6nft", "7nft", "8nft"],
@@ -41,7 +41,7 @@ struct Collection: Codable, Identifiable {
                    author: "1",
                    id: "3"),
         
-        Collection(createdAt: "2023-04-24T02:22:27Z",
+        CatalogItemModel(createdAt: "2023-04-24T02:22:27Z",
                    name: "Green",
                    cover: "Green",
                    nfts: ["1nft", "2nft", "3nft", "4nft", "5nft", "6nft", "7nft", "8nft", "9nft"],
