@@ -7,6 +7,6 @@
 "Error.unknown" = "Произошла неизвестная ошибка";
 "Error.repeat" = "Повторить";
 "Error.title" = "Ошибка";
-"Sort.ByCountNft" = "По названию";
-"Sort.ByName" = "По количеству NFT";
+"Sort.ByCountNft" = "По количеству NFT";
+"Sort.ByName" = "По названию";
 "Sort.title" = "Сортировка";

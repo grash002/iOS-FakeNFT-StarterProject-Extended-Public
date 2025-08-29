@@ -22,7 +22,7 @@ struct TabBarView: View {
                     Label {
                         Text(NSLocalizedString("Tab.cart", comment: ""))
                     } icon: {
-                        Image("basket")
+                        Image(.basket)
                     }
                 }
             StatisticView()
@@ -34,7 +34,12 @@ struct TabBarView: View {
                 }
         }
         .onAppear {
-            UITabBar.appearance().unselectedItemTintColor = .black
+            let appearance = UITabBar.appearance()
+            appearance.unselectedItemTintColor = .black
+            appearance.backgroundColor = .white
+            appearance.shadowImage = UIImage()
+            appearance.backgroundImage = UIImage()
+            appearance.isTranslucent = false
         }
         .backgroundStyle(.background)
     }

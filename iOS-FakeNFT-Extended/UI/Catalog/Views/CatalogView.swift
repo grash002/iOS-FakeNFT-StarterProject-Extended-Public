@@ -9,7 +9,6 @@ struct CatalogView: View {
             sortHeader
             mainScroll
         }
-        .padding(.horizontal, 16)
         .confirmationDialog("Sort.title",
                             isPresented: $showSortDialog,
                             titleVisibility: .visible) {
@@ -21,29 +20,31 @@ struct CatalogView: View {
             }
         }
     }
-    var sortHeader: some View {
+    private var sortHeader: some View {
         HStack {
             Spacer()
             sortButton
         }
+        .padding(.horizontal, 16)
     }
-    var sortButton: some View {
+    private var sortButton: some View {
         Button {
             showSortDialog.toggle()
         } label : {
-            Image("Sort")
+            Image(.sort)
                 .resizable()
                 .scaledToFit()
                 .frame(width: 42, height: 42)
         }
     }
-    var mainScroll: some View {
+    private var mainScroll: some View {
         ScrollView {
             LazyVStack(spacing: 8) {
                 ForEach(viewModel.items) { item in
                     CatalogCardView(item: item)
                 }
             }
+            .padding(.horizontal, 16)
         }
     }
 }

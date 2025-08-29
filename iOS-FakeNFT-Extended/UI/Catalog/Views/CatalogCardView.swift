@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct CatalogCardView: View {
-    let item: Collection
+    let item: CatalogItemModel
     var title: String { "\(item.name) (\(item.nfts.count))" }
     
     var body: some View {
@@ -21,5 +21,5 @@ struct CatalogCardView: View {
 }
 
 #Preview {
-    CatalogCardView(item: Collection.mockData[1])
+    CatalogCardView(item: CatalogItemModel.mockData[1])
 }

@@ -1,8 +1,10 @@
-//
-//  Setting.swift
-//  iOS-FakeNFT-Extended
-//
-//  Created by Иван Иван on 29.08.2025.
-//
-
 import Foundation
+
+struct Setting {
+    var value: String
+    var settingKey: SettingsKey
+}
+
+enum SettingsKey: String {
+    case sortingMethod
+}
