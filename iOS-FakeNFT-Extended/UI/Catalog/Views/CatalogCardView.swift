@@ -1,11 +1,14 @@
 import SwiftUI
 
 struct CatalogCardView: View {
+    
+    // MARK: - Public properties
     let item: CatalogItemModel
     var title: String { "\(item.name) (\(item.nfts.count))" }
     
+    // MARK: - Views
     var body: some View {
-        VStack() {
+        VStack {
             Image(item.cover)
                 .resizable()
                 .aspectRatio(contentMode: .fill)
@@ -20,6 +23,7 @@ struct CatalogCardView: View {
     }
 }
 
+// MARK: - Preview
 #Preview {
     CatalogCardView(item: CatalogItemModel.mockData[1])
 }

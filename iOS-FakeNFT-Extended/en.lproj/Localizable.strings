@@ -10,3 +10,4 @@
 "Sort.ByCountNft" = "По количеству NFT";
 "Sort.ByName" = "По названию";
 "Sort.title" = "Сортировка";
+"CatalogDetail.author" = "Автор коллекции";
