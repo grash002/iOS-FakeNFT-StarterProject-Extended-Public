@@ -25,6 +25,7 @@ struct CatalogView: View {
                                 let model = CatalogDetailViewModel(item: item)
                                 CatalogDetailView(model: model)
                             }
+                            .viewState($viewModel.state)
     }
     private var sortHeader: some View {
         HStack {

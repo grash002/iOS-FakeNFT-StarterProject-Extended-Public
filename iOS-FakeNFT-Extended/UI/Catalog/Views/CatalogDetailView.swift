@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Kingfisher
 
 struct CatalogDetailView: View {
     // MARK: - Public properties
@@ -35,6 +36,7 @@ struct CatalogDetailView: View {
                 }
             }
         }
+        .viewState($model.state)
     }
     private var nftGrid: some View {
         ScrollView {
@@ -71,12 +73,21 @@ struct CatalogDetailView: View {
         }
         .padding(.horizontal, 16)
     }
+    @ViewBuilder
     private var imageCover: some View {
-        Image(model.item.cover)
-            .resizable()
-            .scaledToFit()
-            .cornerRadius(12)
-            .ignoresSafeArea(edges: .top)
+        if let imageUrl = URL(string: model.item.cover) {
+            KFImage(imageUrl)
+                .resizable()
+                .scaledToFit()
+                .cornerRadius(12)
+                .ignoresSafeArea(edges: .top)
+        } else {
+            Image(model.item.cover)
+                .resizable()
+                .scaledToFit()
+                .cornerRadius(12)
+                .ignoresSafeArea(edges: .top)
+        }
     }
     private var backButton: some View {
         VStack {

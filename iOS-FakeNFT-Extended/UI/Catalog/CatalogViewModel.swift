@@ -3,17 +3,23 @@ import Foundation
 final class CatalogViewModel: ObservableObject {
     
     // MARK: - Public Properties
-    @Published var items = CatalogItemModel.mockData
+    @Published var items: [CatalogItemModel] = []
     @Published var selectedSort = SortOptions.byCountNft
     @Published var selectedItem: CatalogItemModel?
     @Published var showSortDialog: Bool = false
+    @Published var state = ViewState.default
     
     // MARK: - Private Properties
     private let storage = SettingStorage()
     
+    @MainActor
+    private lazy var nftService = NftServiceImpl.shared
+    
     // MARK: - Initializers
     init() {
-        getCatalogItems()
+        Task {
+            await getCatalogItems()
+        }
         getSetting()
         sortItems(by: selectedSort)
     }
@@ -31,8 +37,18 @@ final class CatalogViewModel: ObservableObject {
     }
     
     // MARK: - Private Methods
-    private func getCatalogItems() {
-        //TODO: Connect with api
+    @MainActor
+    private func getCatalogItems() async {
+        do {
+            state = .loading
+            let collections = try await nftService.loadCollections()
+            self.items = collections
+            state = .success
+        }
+        catch(let error) {
+            state = .failed
+            print("Failed to load. \r\nError: \(error.localizedDescription)")
+        }
     }
     private func getSetting() {
         if let sortedString = storage.getSetting(key: SettingsKey.sortingMethod.rawValue) {

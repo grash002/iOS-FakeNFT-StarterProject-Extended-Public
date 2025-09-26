@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Kingfisher
 
 struct NftCardView: View {
     
@@ -18,6 +19,7 @@ struct NftCardView: View {
             mainPicture
             ratingStars
             footer
+            Spacer()
         }
         .frame(maxWidth: 108)
     }
@@ -27,12 +29,21 @@ struct NftCardView: View {
             heartButton
         }
     }
+    @ViewBuilder
     private var nftImage: some View {
-        Image(model.nft.images.first ?? "")
-            .resizable()
-            .scaledToFit()
-            .frame(width: 108, height: 108)
-            .cornerRadius(12)
+        if let imageUrl = URL(string: model.nft.images.first ?? "") {
+            KFImage(imageUrl)
+                .resizable()
+                .scaledToFit()
+                .frame(width: 108, height: 108)
+                .cornerRadius(12)
+        } else {
+            Image(model.nft.images.first ?? "")
+                .resizable()
+                .scaledToFit()
+                .frame(width: 108, height: 108)
+                .cornerRadius(12)
+        }
     }
     private var heartButton: some View {
         Button {
