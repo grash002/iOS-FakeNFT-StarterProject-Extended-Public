@@ -1,16 +1,24 @@
 import Foundation
 
 final class CatalogViewModel: ObservableObject {
+    
+    // MARK: - Public Properties
     @Published var items = CatalogItemModel.mockData
     @Published var selectedSort = SortOptions.byCountNft
+    @Published var selectedItem: CatalogItemModel?
+    @Published var showSortDialog: Bool = false
+    
+    // MARK: - Private Properties
     private let storage = SettingStorage()
     
+    // MARK: - Initializers
     init() {
         getCatalogItems()
         getSetting()
         sortItems(by: selectedSort)
     }
     
+    // MARK: - Public Methods
     func sortItems(by options: SortOptions) {
         selectedSort = options
         saveSetting()
@@ -22,6 +30,7 @@ final class CatalogViewModel: ObservableObject {
         }
     }
     
+    // MARK: - Private Methods
     private func getCatalogItems() {
         //TODO: Connect with api
     }
