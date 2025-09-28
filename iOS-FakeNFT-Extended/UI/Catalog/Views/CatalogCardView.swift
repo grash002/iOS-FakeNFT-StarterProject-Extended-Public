@@ -1,5 +1,4 @@
 import SwiftUI
-import Kingfisher
 
 struct CatalogCardView: View {
     
@@ -10,22 +9,27 @@ struct CatalogCardView: View {
     // MARK: - Views
     var body: some View {
         VStack {
-            // Заменяем Image на KFImage для загрузки по URL
             if let imageUrl = URL(string: item.cover) {
-                KFImage(imageUrl)
-                    .resizable()
-                    .placeholder {
+                AsyncImage(url: imageUrl) { phase in
+                    switch phase {
+                    case .empty:
                         ProgressView()
                             .frame(height: 140)
+                    case .success(let image):
+                        image
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
+                            .frame(height: 140, alignment: .top)
+                            .frame(maxWidth: .infinity, alignment: .top)
+                            .clipped()
+                    case .failure:
+                        ProgressView()
+                            .frame(height: 140)
+                    @unknown default:
+                        EmptyView()
                     }
-                    .onFailure { error in
-                        print("Failed to load image: \(error)")
-                    }
-                    .aspectRatio(contentMode: .fill)
-                    .frame(height: 140, alignment: .top)
-                    .frame(maxWidth: .infinity, alignment: .top)
-                    .clipped()
-                    .cornerRadius(12)
+                }
+                .cornerRadius(12)
             } else {
                 Image(item.cover)
                     .resizable()

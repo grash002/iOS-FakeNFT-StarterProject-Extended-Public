@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import Kingfisher
 
 struct CatalogDetailView: View {
     // MARK: - Public properties
@@ -76,11 +75,24 @@ struct CatalogDetailView: View {
     @ViewBuilder
     private var imageCover: some View {
         if let imageUrl = URL(string: model.item.cover) {
-            KFImage(imageUrl)
-                .resizable()
-                .scaledToFit()
-                .cornerRadius(12)
-                .ignoresSafeArea(edges: .top)
+            AsyncImage(url: imageUrl) { phase in
+                if let image = phase.image {
+                    image
+                        .resizable()
+                        .scaledToFit()
+                } else if phase.error != nil {
+                    Rectangle()
+                        .fill(Color.gray.opacity(0.3))
+                        .overlay(
+                            Image(systemName: "photo")
+                                .foregroundColor(.gray)
+                        )
+                } else {
+                    ProgressView()
+                }
+            }
+            .cornerRadius(12)
+            .ignoresSafeArea(edges: .top)
         } else {
             Image(model.item.cover)
                 .resizable()
