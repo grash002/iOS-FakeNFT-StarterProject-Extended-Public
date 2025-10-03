@@ -32,25 +32,27 @@ struct UserCardView: View {
                     .foregroundColor(.appBlack)
                     .multilineTextAlignment(.leading)
                 
-                Button {
-                    // Website action
-                } label: {
-                    Text("Перейти на сайт пользователя")
-                        .font(.system(size: 15))
-                        .foregroundColor(.appBlack)
-                        .padding(.vertical, 10)
-                        .frame(maxWidth: .infinity)
+                if let url = URL(string: user.websiteURL) {
+                    NavigationLink {
+                        WebView(url: url)
+                    } label: {
+                        Text("Перейти на сайт пользователя")
+                            .font(.system(size: 15))
+                            .foregroundColor(.appBlack)
+                            .padding(.vertical, 10)
+                            .frame(maxWidth: .infinity)
+                    }
+                    .padding(.horizontal, 16)
+                    .background(
+                        RoundedRectangle(cornerRadius: 16)
+                            .fill(.white)
+                            .stroke(Color.appBlack, lineWidth: 1.0)
+                    )
+                    .padding(.top, 28)
                 }
-                .padding(.horizontal, 16)
-                .background(
-                    RoundedRectangle(cornerRadius: 16)
-                        .fill(.white)
-                        .stroke(Color.appBlack, lineWidth: 1.0)
-                )
-                .padding(.top, 28)
                 
-                Button {
-                    // Collection action
+                NavigationLink {
+                    NFTCollectionView(user: user)
                 } label: {
                     HStack {
                         Text("Коллекция NFT (\(user.nftCount))")

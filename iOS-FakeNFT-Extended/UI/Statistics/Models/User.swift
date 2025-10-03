@@ -14,6 +14,7 @@ struct User: Identifiable, Sendable {
     let nftCount: Int
     let bio: String
     let websiteURL: String
+    var nftCollection: [NFTItem] = []
 }
 
 enum SortOption {

@@ -31,7 +31,7 @@ struct StatisticsView: View {
                 Button {
                     viewModel.showSortSheet = true
                 } label: {
-                    Image("sortButtonIcon")
+                    Image(.sortButtonIcon)
                         .foregroundColor(.black)
                 }
             }
