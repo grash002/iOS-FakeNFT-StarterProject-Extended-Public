@@ -11,6 +11,15 @@ struct TabBarView: View {
                     )
                 }
                 .backgroundStyle(.background)
+            
+            NavigationStack {
+                StatisticsView()
+            }
+            .tabItem {
+                Image(systemName: "flag.2.crossed.fill")
+                Text("Статистика")
+            }
+            .tag(1)
         }
     }
 }
