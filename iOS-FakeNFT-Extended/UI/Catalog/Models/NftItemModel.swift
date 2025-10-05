@@ -11,7 +11,7 @@ struct NftItemModel: Codable, Identifiable, Hashable  {
     let createdAt: String
     let name: String
     let images: [String]
-    let rating: Int
+    var rating: Int
     let description: String
     let price: Double
     let author: String

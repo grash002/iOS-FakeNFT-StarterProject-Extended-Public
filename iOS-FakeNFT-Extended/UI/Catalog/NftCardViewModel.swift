@@ -13,7 +13,6 @@ class NftCardViewModel: ObservableObject {
     @Published var nft: NftItemModel
     @Published var isFavorite: Bool = false
     @Published var isBuy: Bool = false
-    @Published var rating: Int = 0
     
     // MARK: - Initializers
     init(nft: NftItemModel) {

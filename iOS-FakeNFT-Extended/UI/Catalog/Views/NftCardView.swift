@@ -18,6 +18,7 @@ struct NftCardView: View {
             mainPicture
             ratingStars
             footer
+            Spacer()
         }
         .frame(maxWidth: 108)
     }
@@ -27,12 +28,37 @@ struct NftCardView: View {
             heartButton
         }
     }
+    @ViewBuilder
     private var nftImage: some View {
-        Image(model.nft.images.first ?? "")
-            .resizable()
-            .scaledToFit()
+        if let imageUrl = URL(string: model.nft.images.first ?? "") {
+            AsyncImage(url: imageUrl) { phase in
+                switch phase {
+                case .empty:
+                    ProgressView()
+                case .success(let image):
+                    image
+                        .resizable()
+                        .scaledToFit()
+                case .failure:
+                    Rectangle()
+                        .fill(Color.gray.opacity(0.3))
+                        .overlay(
+                            Image(systemName: "photo")
+                                .foregroundColor(.gray)
+                        )
+                @unknown default:
+                    EmptyView()
+                }
+            }
             .frame(width: 108, height: 108)
             .cornerRadius(12)
+        } else {
+            Image(model.nft.images.first ?? "")
+                .resizable()
+                .scaledToFit()
+                .frame(width: 108, height: 108)
+                .cornerRadius(12)
+        }
     }
     private var heartButton: some View {
         Button {
@@ -53,12 +79,12 @@ struct NftCardView: View {
             ForEach(1...5, id: \.self) { index in
                 Button {
                     withAnimation(.easeInOut) {
-                        model.rating = index
+                        model.nft.rating = index
                     }
                 } label: {
                     Image(systemName: "star.fill")
                         .font(.system(size: 12))
-                        .foregroundStyle(index <= model.rating ? Color(uiColor: UIColor.yaYellow) :
+                        .foregroundStyle(index <= model.nft.rating ? Color(uiColor: UIColor.yaYellow) :
                                             Color(uiColor: UIColor.yaLightGrayLight))
                         .frame(width: 12, height: 12)
                 }

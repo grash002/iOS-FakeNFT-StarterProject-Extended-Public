@@ -35,6 +35,7 @@ struct CatalogDetailView: View {
                 }
             }
         }
+        .viewState($model.state)
     }
     private var nftGrid: some View {
         ScrollView {
@@ -71,12 +72,34 @@ struct CatalogDetailView: View {
         }
         .padding(.horizontal, 16)
     }
+    @ViewBuilder
     private var imageCover: some View {
-        Image(model.item.cover)
-            .resizable()
-            .scaledToFit()
+        if let imageUrl = URL(string: model.item.cover) {
+            AsyncImage(url: imageUrl) { phase in
+                if let image = phase.image {
+                    image
+                        .resizable()
+                        .scaledToFit()
+                } else if phase.error != nil {
+                    Rectangle()
+                        .fill(Color.gray.opacity(0.3))
+                        .overlay(
+                            Image(systemName: "photo")
+                                .foregroundColor(.gray)
+                        )
+                } else {
+                    ProgressView()
+                }
+            }
             .cornerRadius(12)
             .ignoresSafeArea(edges: .top)
+        } else {
+            Image(model.item.cover)
+                .resizable()
+                .scaledToFit()
+                .cornerRadius(12)
+                .ignoresSafeArea(edges: .top)
+        }
     }
     private var backButton: some View {
         VStack {
