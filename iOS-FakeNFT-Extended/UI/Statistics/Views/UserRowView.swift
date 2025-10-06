@@ -27,10 +27,12 @@ struct UserRowView: View {
                     switch phase {
                     case .empty, .failure:
                         Image(systemName: defaultImg)
+                            .clipShape(Circle())
                     case .success(let image):
                         image
                             .resizable()
                             .aspectRatio(contentMode: .fit)
+                            .clipShape(Circle())
                             .frame(width: 28, height: 28)
                     @unknown default:
                         Image(systemName: defaultImg)

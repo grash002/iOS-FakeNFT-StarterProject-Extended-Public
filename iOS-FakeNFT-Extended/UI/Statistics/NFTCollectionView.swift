@@ -101,12 +101,13 @@ struct NFTCardView: View {
                             Text(nft.name)
                                 .font(.system(size: 17, weight: .bold))
                                 .foregroundColor(.appBlack)
+                                .lineLimit(2)
                             
                             Spacer()
                         }
                         
                         HStack {
-                            Text(String(nft.price))
+                            Text(String(nft.price) + " ETH")
                                 .font(.system(size: 10, weight: .medium))
                                 .foregroundColor(.appBlack)
                             

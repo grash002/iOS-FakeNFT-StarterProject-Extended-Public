@@ -10,7 +10,7 @@ import ProgressHUD
 
 @MainActor
 final class NFTCollectionViewModel: ObservableObject {
-    @Published var ntfs: [Nft] = []
+    @Published private(set) var ntfs: [Nft] = []
     
     private let nftService: NftService
     private let user: User

@@ -23,10 +23,12 @@ struct UserCardView: View {
                         switch phase {
                         case .empty, .failure:
                             Image(systemName: defaultImg)
+                                .clipShape(Circle())
                         case .success(let image):
                             image
                                 .resizable()
                                 .aspectRatio(contentMode: .fit)
+                                .clipShape(Circle())
                                 .frame(width: 70, height: 70)
                         @unknown default:
                             Image(systemName: defaultImg)
@@ -43,10 +45,14 @@ struct UserCardView: View {
                 .padding(.vertical, 20)
                 
                 if let description = user.description {
-                    Text(description)
-                        .font(.system(size: 13))
-                        .foregroundColor(.appBlack)
-                        .multilineTextAlignment(.leading)
+                    HStack(spacing: .zero) {
+                        Text(description)
+                            .font(.system(size: 13))
+                            .foregroundColor(.appBlack)
+                            .multilineTextAlignment(.leading)
+                        
+                        Spacer(minLength: .zero)
+                    }
                 }
                 
                 if let url = URL(string: user.website) {
