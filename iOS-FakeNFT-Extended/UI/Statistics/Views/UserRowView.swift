@@ -16,7 +16,7 @@ struct UserRowView: View {
             Text("\(rank)")
                 .font(.system(size: 15, weight: .regular))
                 .foregroundColor(.appBlack)
-                .frame(width: 27, alignment: .center)
+                .frame(width: 27)
             
             HStack(spacing: 8) {
                 Image(systemName: user.avatar)
@@ -38,7 +38,7 @@ struct UserRowView: View {
             .padding(.vertical, 26)
             .background(
                 RoundedRectangle(cornerRadius: 12)
-                    .fill(.userRow)
+                    .fill(.appLightGray)
             )
         }
     }
