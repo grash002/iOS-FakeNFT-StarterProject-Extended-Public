@@ -7,14 +7,18 @@
 
 import Foundation
 
-struct User: Identifiable, Sendable {
-    let id = UUID()
+struct User: Identifiable, Sendable, Codable {
+    let id: String
     let name: String
+    let description: String?
+    let nfts: [String]
     let avatar: String
-    let nftCount: Int
-    let bio: String
-    let websiteURL: String
-    var nftCollection: [NFTItem] = []
+    let rating: String
+    let website: String
+    
+    var nftCount: Int {
+        nfts.count
+    }
 }
 
 enum SortOption {

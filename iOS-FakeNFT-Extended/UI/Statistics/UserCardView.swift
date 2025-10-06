@@ -15,9 +15,24 @@ struct UserCardView: View {
         ScrollView {
             VStack(spacing: .zero) {
                 HStack(spacing: 16) {
-                    Image(systemName: user.avatar)
-                        .resizable()
-                        .frame(width: 70, height: 70)
+                    AsyncImage(
+                        url: URL(string: user.avatar),
+                        scale: 1.0,
+                        transaction: .init(animation: .default)
+                    ) { phase in
+                        switch phase {
+                        case .empty, .failure:
+                            Image(systemName: defaultImg)
+                        case .success(let image):
+                            image
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .frame(width: 70, height: 70)
+                        @unknown default:
+                            Image(systemName: defaultImg)
+                        }
+                    }
+                    .frame(width: 70, height: 70)
                     
                     Text(user.name)
                         .font(.system(size: 22, weight: .bold))
@@ -27,12 +42,14 @@ struct UserCardView: View {
                 }
                 .padding(.vertical, 20)
                 
-                Text(user.bio)
-                    .font(.system(size: 13))
-                    .foregroundColor(.appBlack)
-                    .multilineTextAlignment(.leading)
+                if let description = user.description {
+                    Text(description)
+                        .font(.system(size: 13))
+                        .foregroundColor(.appBlack)
+                        .multilineTextAlignment(.leading)
+                }
                 
-                if let url = URL(string: user.websiteURL) {
+                if let url = URL(string: user.website) {
                     NavigationLink {
                         WebView(url: url)
                     } label: {

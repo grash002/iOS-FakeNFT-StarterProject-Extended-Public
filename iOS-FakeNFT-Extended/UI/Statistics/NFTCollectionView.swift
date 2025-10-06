@@ -8,8 +8,12 @@
 import SwiftUI
 
 struct NFTCollectionView: View {
-    let user: User
-    @State private var likedItems: Set<UUID> = []
+    @StateObject private var viewModel: NFTCollectionViewModel
+    @State private var likedItems: Set<String> = []
+    
+    init(user: User) {
+        _viewModel = StateObject(wrappedValue: NFTCollectionViewModel(user: user))
+    }
     
     private let itemWidth: CGFloat = 108
     private let spacing: CGFloat = 8
@@ -23,7 +27,7 @@ struct NFTCollectionView: View {
             
             ScrollView {
                 LazyVGrid(columns: columns, spacing: 8) {
-                    ForEach(user.nftCollection) { nft in
+                    ForEach(viewModel.ntfs, id: \.id) { nft in
                         NFTCardView(nft: nft, isLiked: likedItems.contains(nft.id)) {
                             if likedItems.contains(nft.id) {
                                 likedItems.remove(nft.id)
@@ -46,7 +50,7 @@ struct NFTCollectionView: View {
 
 // MARK: - NFT Card View
 struct NFTCardView: View {
-    let nft: NFTItem
+    let nft: Nft
     let isLiked: Bool
     let onLikeTap: () -> Void
     
@@ -54,10 +58,19 @@ struct NFTCardView: View {
         VStack(alignment: .leading, spacing: 8) {
             ZStack(alignment: .topTrailing) {
                 
-                Image(nft.imageName)
-                    .resizable()
+                if let img = nft.images.first {
+                    AsyncImage(url: img) { image in
+                        image
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: 108, height: 108)
+                            .clipShape(RoundedRectangle(cornerRadius: 12))
+                    } placeholder: {
+                        ProgressView()
+                    }
                     .frame(width: 108, height: 108)
                     .clipShape(RoundedRectangle(cornerRadius: 12))
+                }
                     
                 Button {
                     onLikeTap()
@@ -93,7 +106,7 @@ struct NFTCardView: View {
                         }
                         
                         HStack {
-                            Text(nft.price)
+                            Text(String(nft.price))
                                 .font(.system(size: 10, weight: .medium))
                                 .foregroundColor(.appBlack)
                             
