@@ -43,6 +43,7 @@ struct UserRowView: View {
                 Text(user.name)
                     .font(.system(size: 22, weight: .bold))
                     .foregroundColor(.appBlack)
+                    .lineLimit(1)
                 
                 Spacer()
                 
