@@ -9,7 +9,6 @@ import SwiftUI
 
 struct NFTCollectionView: View {
     @StateObject private var viewModel: NFTCollectionViewModel
-    @State private var likedItems: Set<String> = []
     
     init(user: User) {
         _viewModel = StateObject(wrappedValue: NFTCollectionViewModel(user: user))
@@ -28,13 +27,13 @@ struct NFTCollectionView: View {
             ScrollView {
                 LazyVGrid(columns: columns, spacing: 8) {
                     ForEach(viewModel.ntfs, id: \.id) { nft in
-                        NFTCardView(nft: nft, isLiked: likedItems.contains(nft.id)) {
-                            if likedItems.contains(nft.id) {
-                                likedItems.remove(nft.id)
-                            } else {
-                                likedItems.insert(nft.id)
-                            }
-                        }
+                        NFTCardView(
+                            nft: nft,
+                            isLiked: viewModel.ntfsInFavorite.contains(nft.id),
+                            inCart: viewModel.ntfsInCart.contains(nft.id),
+                            onLikeTap: { viewModel.toggleFavorite(nft) },
+                            onCartTap: { viewModel.toggleCart(nft) }
+                        )
                         .frame(maxWidth: itemWidth)
                     }
                 }
@@ -52,7 +51,9 @@ struct NFTCollectionView: View {
 struct NFTCardView: View {
     let nft: Nft
     let isLiked: Bool
+    var inCart: Bool
     let onLikeTap: () -> Void
+    let onCartTap: () -> Void
     
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -118,9 +119,9 @@ struct NFTCardView: View {
                     Spacer(minLength: .zero)
                     
                     Button {
-                        // Add to cart
+                        onCartTap()
                     } label: {
-                        Image(.basket)
+                        Image(inCart ? .basketFill : .basket)
                     }
                     .padding(.trailing, 12)
                 }
