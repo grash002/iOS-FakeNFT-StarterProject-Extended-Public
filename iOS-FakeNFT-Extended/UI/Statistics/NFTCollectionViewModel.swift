@@ -25,8 +25,15 @@ final class NFTCollectionViewModel: ObservableObject {
     init(user: User) {
         self.user = user
         
-        favoriteService = FavoriteService.shared
-        cartService = CartService.shared
+        favoriteService = FavoriteService(
+            networkClient: DefaultNetworkClient(),
+            storage: NftStorageImpl()
+        )
+        
+        cartService = CartService(
+            networkClient: DefaultNetworkClient(),
+            storage: NftStorageImpl()
+        )
         
         nftService = NftServiceImpl(
             networkClient: DefaultNetworkClient(),
@@ -38,18 +45,36 @@ final class NFTCollectionViewModel: ObservableObject {
     }
     
     func toggleCart(_ nft: Nft) {
-        if cartService.contains(nft) {
-            cartService.remove(nft)
-        } else {
-            cartService.add(nft)
+        Task {
+            ProgressHUD.animate(interaction: false)
+            
+            do {
+                if cartService.contains(nft) {
+                    try await cartService.remove(nft)
+                } else {
+                    try await cartService.add(nft)
+                }
+                ProgressHUD.dismiss()
+            } catch {
+                ProgressHUD.failed(error)
+            }
         }
     }
     
     func toggleFavorite(_ nft: Nft) {
-        if favoriteService.contains(nft) {
-            favoriteService.remove(nft)
-        } else {
-            favoriteService.add(nft)
+        Task {
+            ProgressHUD.animate(interaction: false)
+            
+            do {
+                if favoriteService.contains(nft) {
+                    try await favoriteService.remove(nft)
+                } else {
+                    try await favoriteService.add(nft)
+                }
+                ProgressHUD.dismiss()
+            } catch {
+                ProgressHUD.failed(error)
+            }
         }
     }
     
@@ -74,12 +99,12 @@ final class NFTCollectionViewModel: ObservableObject {
     func addObservers() {
         cartService.itemsPublisher
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] in self?.ntfsInCart = $0.map(\.id) }
+            .sink { [weak self] in self?.ntfsInCart = $0 }
             .store(in: &subscriptions)
         
         favoriteService.itemsPublisher
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] in self?.ntfsInFavorite = $0.map(\.id) }
+            .sink { [weak self] in self?.ntfsInFavorite = $0 }
             .store(in: &subscriptions)
     }
 }
