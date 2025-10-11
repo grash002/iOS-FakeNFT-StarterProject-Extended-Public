@@ -16,7 +16,7 @@ protocol CartProtocol {
 }
 
 final class CartService: CartProtocol, ObservableObject {
-    @Published private var items: [String] = []
+    @Published var items: [String] = []
     
     var itemsPublisher: Published<[String]>.Publisher { $items }
     
@@ -57,7 +57,7 @@ private extension CartService {
             nfts: items
         )
         
-        let request = UpdateOrdersRequest(id: profileId, orders: orders)
+        let request = UpdateOrdersRequest(id: profileId, orders: updatedOrders)
         _ = try await networkClient.send(request: request)
     }
     

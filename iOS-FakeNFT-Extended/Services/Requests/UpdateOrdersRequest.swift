@@ -17,6 +17,8 @@ struct UpdateOrdersRequest: NetworkRequest {
     
     var httpMethod: HttpMethod { .put }
     
+    var contentType: ContentType { .urlEncoded }
+    
     var dto: Encodable? {
         orders
     }

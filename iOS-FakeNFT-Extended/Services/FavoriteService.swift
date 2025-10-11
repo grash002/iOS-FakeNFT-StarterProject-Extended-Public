@@ -16,7 +16,7 @@ protocol FavoriteProtocol {
 }
 
 final class FavoriteService: FavoriteProtocol, ObservableObject {
-    @Published private var items: [String] = []
+    @Published var items: [String] = []
     
     var itemsPublisher: Published<[String]>.Publisher { $items }
     

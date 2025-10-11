@@ -17,6 +17,8 @@ struct UpdateProfileRequest: NetworkRequest {
     
     var httpMethod: HttpMethod { .put }
     
+    var contentType: ContentType { .urlEncoded }
+    
     var dto: Encodable? {
         profile
     }
