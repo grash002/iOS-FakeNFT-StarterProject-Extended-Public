@@ -35,6 +35,7 @@ actor DefaultNetworkClient: NetworkClient {
             throw NetworkClientError.urlSessionError
         }
         guard 200 ..< 300 ~= response.statusCode else {
+            print(response.statusCode.description)
             throw NetworkClientError.httpStatusCode(response.statusCode)
         }
         return data
@@ -55,16 +56,48 @@ actor DefaultNetworkClient: NetworkClient {
         var urlRequest = URLRequest(url: endpoint)
         urlRequest.httpMethod = request.httpMethod.rawValue
 
-        if let dto = request.dto,
-           let dtoEncoded = try? encoder.encode(dto) {
-            urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
-            urlRequest.httpBody = dtoEncoded
+        if let dto = request.dto {
+            urlRequest.setValue(request.contentType.rawValue, forHTTPHeaderField: "Content-Type")
+            
+            switch request.contentType {
+            case .json:
+                urlRequest.httpBody = try? JSONEncoder().encode(dto)
+            case .urlEncoded:
+                urlRequest.httpBody = asURLEncodedData(dto)
+            }
         }
+        
         urlRequest.addValue(RequestConstants.token, forHTTPHeaderField: "X-Practicum-Mobile-Token")
 
         return urlRequest
     }
 
+    func asURLEncodedData(_ dto: Encodable) -> Data? {
+        guard let data = try? JSONEncoder().encode(dto),
+              let parameters = try? JSONSerialization.jsonObject(with: data) as? [String: Any]
+        else { return nil }
+        
+        var components: [String] = []
+        
+        for (key, value) in parameters {
+            switch value {
+            case let array as [Any]:
+                for item in array {
+                    let encodedKey = key.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? key
+                    let encodedValue = "\(item)".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
+                    components.append("\(encodedKey)=\(encodedValue)")
+                }
+            default:
+                let encodedKey = key.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? key
+                let encodedValue = "\(value)".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
+                components.append("\(encodedKey)=\(encodedValue)")
+            }
+        }
+        
+        let bodyString = components.joined(separator: "&")
+        return bodyString.data(using: .utf8)
+    }
+    
     private func parse<T: Decodable>(data: Data) async throws -> T {
         do {
             return try decoder.decode(T.self, from: data)
