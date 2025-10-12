@@ -19,14 +19,31 @@ struct UserRowView: View {
                 .frame(width: 27)
             
             HStack(spacing: 8) {
-                Image(systemName: user.avatar)
-                    .font(.system(size: 28))
-                    .foregroundColor(.gray)
-                    .frame(width: 28, height: 28)
+                AsyncImage(
+                    url: URL(string: user.avatar),
+                    scale: 1.0,
+                    transaction: .init(animation: .default)
+                ) { phase in
+                    switch phase {
+                    case .empty, .failure:
+                        Image(systemName: defaultImg)
+                            .clipShape(Circle())
+                    case .success(let image):
+                        image
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .clipShape(Circle())
+                            .frame(width: 28, height: 28)
+                    @unknown default:
+                        Image(systemName: defaultImg)
+                    }
+                }
+                .frame(width: 28, height: 28)
                 
                 Text(user.name)
                     .font(.system(size: 22, weight: .bold))
                     .foregroundColor(.appBlack)
+                    .lineLimit(1)
                 
                 Spacer()
                 
@@ -43,3 +60,5 @@ struct UserRowView: View {
         }
     }
 }
+
+let defaultImg = "person.circle.fill"

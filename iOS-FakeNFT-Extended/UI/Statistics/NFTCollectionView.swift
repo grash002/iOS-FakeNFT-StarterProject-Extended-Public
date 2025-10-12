@@ -8,8 +8,11 @@
 import SwiftUI
 
 struct NFTCollectionView: View {
-    let user: User
-    @State private var likedItems: Set<UUID> = []
+    @StateObject private var viewModel: NFTCollectionViewModel
+    
+    init(user: User) {
+        _viewModel = StateObject(wrappedValue: NFTCollectionViewModel(user: user))
+    }
     
     private let itemWidth: CGFloat = 108
     private let spacing: CGFloat = 8
@@ -23,14 +26,14 @@ struct NFTCollectionView: View {
             
             ScrollView {
                 LazyVGrid(columns: columns, spacing: 8) {
-                    ForEach(user.nftCollection) { nft in
-                        NFTCardView(nft: nft, isLiked: likedItems.contains(nft.id)) {
-                            if likedItems.contains(nft.id) {
-                                likedItems.remove(nft.id)
-                            } else {
-                                likedItems.insert(nft.id)
-                            }
-                        }
+                    ForEach(viewModel.ntfs, id: \.id) { nft in
+                        NFTCardView(
+                            nft: nft,
+                            isLiked: viewModel.ntfsInFavorite.contains(nft.id),
+                            inCart: viewModel.ntfsInCart.contains(nft.id),
+                            onLikeTap: { viewModel.toggleFavorite(nft) },
+                            onCartTap: { viewModel.toggleCart(nft) }
+                        )
                         .frame(maxWidth: itemWidth)
                     }
                 }
@@ -46,18 +49,29 @@ struct NFTCollectionView: View {
 
 // MARK: - NFT Card View
 struct NFTCardView: View {
-    let nft: NFTItem
+    let nft: Nft
     let isLiked: Bool
+    var inCart: Bool
     let onLikeTap: () -> Void
+    let onCartTap: () -> Void
     
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             ZStack(alignment: .topTrailing) {
                 
-                Image(nft.imageName)
-                    .resizable()
+                if let img = nft.images.first {
+                    AsyncImage(url: img) { image in
+                        image
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: 108, height: 108)
+                            .clipShape(RoundedRectangle(cornerRadius: 12))
+                    } placeholder: {
+                        ProgressView()
+                    }
                     .frame(width: 108, height: 108)
                     .clipShape(RoundedRectangle(cornerRadius: 12))
+                }
                     
                 Button {
                     onLikeTap()
@@ -88,12 +102,13 @@ struct NFTCardView: View {
                             Text(nft.name)
                                 .font(.system(size: 17, weight: .bold))
                                 .foregroundColor(.appBlack)
+                                .lineLimit(2)
                             
                             Spacer()
                         }
                         
                         HStack {
-                            Text(nft.price)
+                            Text(String(nft.price) + " ETH")
                                 .font(.system(size: 10, weight: .medium))
                                 .foregroundColor(.appBlack)
                             
@@ -104,9 +119,9 @@ struct NFTCardView: View {
                     Spacer(minLength: .zero)
                     
                     Button {
-                        // Add to cart
+                        onCartTap()
                     } label: {
-                        Image(.basket)
+                        Image(inCart ? .basketFill : .basket)
                     }
                     .padding(.trailing, 12)
                 }
