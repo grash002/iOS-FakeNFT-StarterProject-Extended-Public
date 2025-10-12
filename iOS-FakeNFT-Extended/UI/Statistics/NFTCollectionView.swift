@@ -121,9 +121,11 @@ struct NFTCardView: View {
                     Button {
                         onCartTap()
                     } label: {
-                        Image(inCart ? .basketFill : .basket)
+                        Image(inCart ? .selectedCart : .cart)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 40, height: 40)
                     }
-                    .padding(.trailing, 12)
                 }
             }
             .padding(.bottom, 20)

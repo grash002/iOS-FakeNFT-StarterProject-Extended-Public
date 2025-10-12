@@ -86,7 +86,7 @@ final class NFTCollectionViewModel: ObservableObject {
             
             var ntfs: [Nft] = []
             for id in user.nfts {
-                guard let object = try? await nftService.loadNft(id: id)
+                guard let object: Nft = try? await nftService.loadNft(id: id)
                 else { continue }
                 ntfs.append(object)
             }
