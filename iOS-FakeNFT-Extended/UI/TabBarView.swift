@@ -25,23 +25,17 @@ struct TabBarView: View {
                         Image(.basket)
                     }
                 }
-            StatisticView()
-                .tabItem {
-                    Label(
-                        NSLocalizedString("Tab.statistic", comment: ""),
-                        systemImage: "flag.2.crossed.fill"
-                    )
-                }
+            
+            NavigationStack {
+                StatisticsView()
+            }
+            .tabItem {
+                Label(
+                    NSLocalizedString("Tab.statistic", comment: ""),
+                    systemImage: "flag.2.crossed.fill"
+                )
+            }
         }
-        .onAppear {
-            let appearance = UITabBar.appearance()
-            appearance.unselectedItemTintColor = .black
-            appearance.backgroundColor = .white
-            appearance.shadowImage = UIImage()
-            appearance.backgroundImage = UIImage()
-            appearance.isTranslucent = false
-        }
-        .backgroundStyle(.background)
     }
 }
 
